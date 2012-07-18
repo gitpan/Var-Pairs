@@ -1,18 +1,9 @@
-Var::Pairs version 0.001000
+Var::Pairs version 0.001001
 
-[ REPLACE THIS...
-
-  The README is used to introduce the module and provide instructions on
-  how to install the module, any machine dependencies it may have (for
-  example C compilers and installed libraries) and any other information
-  that should be understood before the module is installed.
-
-  A README file is required for CPAN modules since CPAN extracts the
-  README file from a module distribution so that people browsing the
-  archive can use it get an idea of the modules uses. It is usually a
-  good idea to provide version information here so that people can
-  decide whether fixes for the module are worth downloading.
-]
+This module exports a small number of subroutines that
+add some Perl 6 conveniences to Perl 5. Specifically,
+the module exports several subroutines that simplify
+interactions with key/value pairs in hashes and arrays.
 
 
 INSTALLATION

@@ -1,6 +1,6 @@
 package Var::Pairs;
 
-our $VERSION = '0.001000';
+our $VERSION = '0.001001';
 
 use 5.014;
 use warnings;
@@ -336,7 +336,7 @@ Var::Pairs - OO iterators and pair constructors for variables
 
 =head1 VERSION
 
-This document describes Var::Pairs version 0.001000
+This document describes Var::Pairs version 0.001001
 
 
 =head1 SYNOPSIS
