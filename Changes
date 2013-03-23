@@ -14,3 +14,10 @@ Revision history for Var-Pairs
 0.001001  Wed Jul 18 13:55:31 2012
 
     Update README
+
+
+
+0.001002  Sat Mar 23 07:58:28 2013
+
+    Removed autobox dependency for t/kvs.t
+    (Thanks Salvatore!)

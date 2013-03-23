@@ -12,7 +12,7 @@ for my $index (0..$#data) {
 }
 
 while (1) {
-    my ($index, $value) = @data->each_kv
+    my ($index, $value) = each_kv @data
         or last;
     is $data[$index], $value => "each_kv'd index $index correctly";
 }

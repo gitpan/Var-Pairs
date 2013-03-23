@@ -1,6 +1,6 @@
 package Var::Pairs;
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 
 use 5.014;
 use warnings;
@@ -36,8 +36,10 @@ sub import {
 
     # Enable autoboxing of ->pairs() in caller's lexical scope, if possible...
     if ($autoboxing) {
-        $class->SUPER::import(HASH => 'Var::Pairs::autobox', ARRAY =>
-        'Var::Pairs::autobox');
+        $class->SUPER::import(
+            HASH  => 'Var::Pairs::autobox',
+            ARRAY => 'Var::Pairs::autobox',
+        );
     }
 }
 
@@ -336,7 +338,7 @@ Var::Pairs - OO iterators and pair constructors for variables
 
 =head1 VERSION
 
-This document describes Var::Pairs version 0.001001
+This document describes Var::Pairs version 0.001002
 
 
 =head1 SYNOPSIS
