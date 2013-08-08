@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Var-Pairs
-version:            0.001002
+version:            0.001003
 abstract:           OO iterators and pair constructors for variables
 author:
     - Damian Conway <DCONWAY@CPAN.org>
@@ -11,10 +11,10 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Data::Alias:   1.16
-    PadWalker:     1.93
-    Scope::Upper:  0.18
-    Test::More:    0
+    Data::Alias:      1.16
+    Devel::Callsite:  0.06
+    PadWalker:        1.93
+    Test::More:       0
 no_index:
     directory:
         - t

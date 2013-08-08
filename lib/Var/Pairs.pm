@@ -1,10 +1,12 @@
 package Var::Pairs;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001003';
 
 use 5.014;
 use warnings;
+no if $] >= 5.018, warnings => "experimental::smartmatch";
 use Carp;
+use Devel::Callsite;
 
 # Check for autoboxing, and set up pairs() method if applicable..
 my $autoboxing;
@@ -101,7 +103,7 @@ sub pairs (+) {
     }
 
     # Uniquely identify this call, according to its lexical context...
-    my $ID = _uniq_ID($container_ref);
+    my $ID = callsite();
 
     # Short-circuit if this is a repeated call...
     if (!wantarray && $iterator_for{$ID}) {
@@ -125,7 +127,7 @@ sub each_pair (+) {
     my ($container_ref) = @_;
 
     # Uniquely identify this call, according to its lexical context...
-    my $ID = _uniq_ID($container_ref);
+    my $ID = callsite();
 
     # Build an iterator...
     $iterator_for{$ID} //= [ &pairs ];
@@ -152,7 +154,7 @@ sub kvs (+) {
     }
 
     # Uniquely identify this call, according to its lexical context...
-    my $ID = _uniq_ID($container_ref);
+    my $ID = callsite();
 
     # Return the key/value list, according to the container type...
     if ($container_type eq 'ARRAY') {
@@ -167,7 +169,7 @@ sub each_kv (+) {
     my ($container_ref) = @_;
 
     # Uniquely identify this call, according to its lexical context...
-    my $ID = _uniq_ID($container_ref);
+    my $ID = callsite();
 
     # Build an iterator...
     $iterator_for{$ID} //= [ &kvs ];
@@ -317,16 +319,6 @@ package Var::Pairs::Pair {
     );
 }
 
-# Create a unique identifier for a given call to pairs()...
-sub _uniq_ID {
-    my $container_ref = shift;
-
-    # ID is based on file, line, subname, hints, and caller scope...
-    require Scope::Upper;
-    return join '|', (caller 1)[1..3,8], Scope::Upper::UP(Scope::Upper::UP());
-}
-
-
 1; # Magic true value required at end of module
 __END__
 
@@ -338,7 +330,7 @@ Var::Pairs - OO iterators and pair constructors for variables
 
 =head1 VERSION
 
-This document describes Var::Pairs version 0.001002
+This document describes Var::Pairs version 0.001003
 
 
 =head1 SYNOPSIS
@@ -797,7 +789,7 @@ The module requires Perl 5.014 and the following modules:
 
 =item Perl 5.14 or later
 
-=item Scope::Upper
+=item Devel::Callsite
 
 =item Data::Alias
 

@@ -4,10 +4,7 @@ use Test::More tests => 3;
 
 use Var::Pairs;
 
-
-SKIP: {
-    skip "Can't put two calls to pair() on one line without Scope::Upper" => 1
-        if !eval{ require Scope::Upper };
+{
     my @results;
     my @data = 'a'..'f';
     for my $next1 (pairs @data) { for my $next2 (pairs @data) {
@@ -27,10 +24,7 @@ SKIP: {
     is_deeply \@results, ['a'..'f','a'..'f']  => 'repeated pairs';
 }
 
-SKIP: {
-    skip "Can't put two calls to pair() on one line without Scope::Upper" => 1
-        if !eval{ require Scope::Upper };
-
+{
     my @data = 'a'..'f';
 
     while (my $next_outer = each_pair @data) { while (my $next_inner = each_pair @data) {

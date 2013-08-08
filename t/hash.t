@@ -1,5 +1,6 @@
 use 5.014;
 use strict;
+no if $] >= 5.018, warnings => "experimental::smartmatch";
 use Test::More tests => 13;
 
 use Var::Pairs;

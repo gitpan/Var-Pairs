@@ -1,4 +1,5 @@
 use 5.014;
+no if $] >= 5.018, warnings => "experimental::smartmatch";
 use strict;
 use Test::More tests => 13;
 

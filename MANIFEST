@@ -20,4 +20,5 @@ t/nested.t
 t/nested_kv.t
 t/one_liner.t
 t/to_pair.t
+t/nexted_kv_same_statement.t
 META.yml                                 Module meta-data (added by MakeMaker)

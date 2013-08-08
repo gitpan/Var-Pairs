@@ -21,3 +21,10 @@ Revision history for Var-Pairs
 
     Removed autobox dependency for t/kvs.t
     (Thanks Salvatore!)
+
+
+0.001003  Thu Aug  8 11:46:09 2013
+
+    Converted to use Devel::Callsite instead of Scope::Upper
+    in order to identify caller location for the each_...
+    family of functions.
