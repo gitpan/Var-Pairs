@@ -28,3 +28,9 @@ Revision history for Var-Pairs
     Converted to use Devel::Callsite instead of Scope::Upper
     in order to identify caller location for the each_...
     family of functions.
+
+
+
+0.001005  Tue Mar 11 10:17:52 2014
+
+    Added export controls (thanks Rob)

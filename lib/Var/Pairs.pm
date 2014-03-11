@@ -1,6 +1,6 @@
 package Var::Pairs;
 
-our $VERSION = '0.001003';
+our $VERSION = '0.001005';
 
 use 5.014;
 use warnings;
@@ -24,14 +24,27 @@ BEGIN {
     }
 }
 
+# API...
+my %EXPORTABLE;
+@EXPORTABLE{qw< pairs kvs each_pair each_kv to_kv to_pair invert invert_pairs >} = ();
 
 sub import {
-    my ($class) = @_;
+    my ($class, @exports) = @_;
+
+    # Check for export requests...
+    if (!@exports) {
+        @exports = keys %EXPORTABLE;
+    }
+    else {
+        my @bad = grep { !exists $EXPORTABLE{$_} } @exports;
+        carp 'Unknown subroutine' . (@bad==1 ? q{} : q{s})  . " requested: @bad"
+            if @bad;
+    }
 
     # Export API...
     no strict 'refs';
     my $caller = caller;
-    for my $subname (qw< pairs kvs each_pair each_kv to_kv to_pair invert invert_pairs >) {
+    for my $subname (@exports) {
         no strict 'refs';
         *{$caller.'::'.$subname} = \&{$subname};
     }
@@ -330,7 +343,7 @@ Var::Pairs - OO iterators and pair constructors for variables
 
 =head1 VERSION
 
-This document describes Var::Pairs version 0.001003
+This document describes Var::Pairs version 0.001005
 
 
 =head1 SYNOPSIS
