@@ -34,3 +34,12 @@ Revision history for Var-Pairs
 0.001005  Tue Mar 11 10:17:52 2014
 
     Added export controls (thanks Rob)
+
+
+0.002000  Sat Apr  5 17:19:03 2014
+
+    Converted Pair class to array-based for a 50% speed-up
+    (thanks Toby!)
+
+    Added ->kv() to Pair type
+    (thanks Toby)

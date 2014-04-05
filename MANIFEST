@@ -21,4 +21,5 @@ t/nested_kv.t
 t/one_liner.t
 t/to_pair.t
 t/nexted_kv_same_statement.t
+t/hash_while_kv.t
 META.yml                                 Module meta-data (added by MakeMaker)

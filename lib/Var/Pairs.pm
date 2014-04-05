@@ -1,6 +1,6 @@
 package Var::Pairs;
 
-our $VERSION = '0.001005';
+our $VERSION = '0.002000';
 
 use 5.014;
 use warnings;
@@ -279,32 +279,35 @@ sub _get_each_kv {
 
 # Class implementing each key/value pair...
 package Var::Pairs::Pair {
-    use Hash::Util qw< fieldhash >;
     use Scalar::Util qw< looks_like_number >;
     use Data::Alias;
     use Carp;
 
     # Each pair object has two attributes...
-    fieldhash my %key_for;
-    fieldhash my %value_for;
+    my @key_for;
+    my @value_for;
+    my @freed;
 
     # Accessors for the attributes (value is read/write)...
-    sub value :lvalue { $value_for{shift()} }
-    sub index         {   $key_for{shift()} }
-    sub key           {   $key_for{shift()} }
+    sub value :lvalue { $value_for[${shift()}] }
+    sub index         {   $key_for[${shift()}] }
+    sub key           {   $key_for[${shift()}] }
+    sub kv            { my $self = shift;  $key_for[$$self], $value_for[$$self] }
 
     # The usual inside-out constructor...
     sub new {
         my ($class, $key, $container_ref, $container_type) = @_;
 
         # Create a scalar based object...
-        my $new_obj = bless \do{ my $scalar }, $class;
+        my $scalar = @key_for;
+        my $new_obj = bless \$scalar, $class;
 
         # Initialize its attributes (value needs to be an alias to the original)...
-        $key_for{$new_obj} = $key;
-        alias $value_for{$new_obj} = $container_type eq 'array' ? $container_ref->[$key]
-                                   : $container_type eq 'none'  ? $_[2]
-                                   :                              $container_ref->{$key};
+        $key_for[$scalar] = $key;
+        alias $value_for[$scalar] = $container_type eq 'array' ? $container_ref->[$key]
+                                  : $container_type eq 'none'  ? $_[2]
+                                  :                              $container_ref->{$key};
+        $freed[$scalar] = 0;
 
         return $new_obj;
     }
@@ -314,22 +317,40 @@ package Var::Pairs::Pair {
         # As a string, a pair is just: key => value
         q{""}   => sub {
             my $self = shift;
-            my $value = $value_for{$self};
+            my $value = $value_for[$$self];
             $value = ref $value                ? ref $value
                    : looks_like_number($value) ? $value
                    :                             qq{"$value"};
-            return "$key_for{$self} => $value";
+            return "$key_for[$$self] => $value";
         },
 
         # Can't numerify a pair (make it a hanging offence)...
         q{0+}   => sub { croak "Can't convert Pair(".shift.") to a number" },
 
         # All pairs are true (just as in Perl 6)...
-        q{bool} => sub { 1 },
+        q{bool} => sub { !!1 },
 
         # Everything else as normal...
         fallback => 1,
     );
+
+    sub DESTROY {
+        my $self = shift;
+
+        # Mark current storage as reclaimable...
+        $freed[$$self] = 1;
+
+        # Reclaim everything possible...
+        if ($freed[$#freed]) {
+            my $free_from = $#freed;
+            while ($free_from >= 0 && $freed[$free_from]) {
+                $free_from--;
+            }
+            splice @key_for,   $free_from+1;
+            splice @value_for, $free_from+1;
+            splice @freed,     $free_from+1;
+        }
+    }
 }
 
 1; # Magic true value required at end of module
@@ -343,7 +364,7 @@ Var::Pairs - OO iterators and pair constructors for variables
 
 =head1 VERSION
 
-This document describes Var::Pairs version 0.001005
+This document describes Var::Pairs version 0.002000
 
 
 =head1 SYNOPSIS
@@ -592,10 +613,30 @@ will increment each value in the C<%items> hash
 whose key starts with 'Q'.
 
 
+=item C<< $pair->kv >>
+
+Returns a two-element list containing copies of the key and the value of
+the pair. That is:
+
+    for my $item (pairs %items) {
+        my ($k, $v) = $item->kv;
+        say $v
+            if $k =~ /\d/;
+    }
+
+will print the value of every entry in the C<%items> hash
+whose key includes a digit.
+
+
 =item C<< "$pair" >>
 
 When used as a string, a pair is converted to a suitable representation
 for a pair, namely: C<< "I<key> => I<value>" >>
+
+
+=item C<< 0 + $pair >>
+
+Pairs cannot be used as numbers: an exception is thrown.
 
 
 =item C<< if ($pair) {...} >>
